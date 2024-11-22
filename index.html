@@ -6,77 +6,166 @@
     <link rel="stylesheet" href="https://unpkg.com/handsfree@8.5.1/build/lib/assets/handsfree.css" />
     <script src="https://unpkg.com/handsfree@8.5.1/build/lib/handsfree.js"></script>
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+
       section {
         display: flex;
         justify-content: center;
         align-items: center;
-        height: 100vh;
       }
 
       img {
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        border: 4rem solid white;
+        border: 2rem solid white;
+      }
+
+      div {
+        display: none;
+      }
+
+      #debugger-holder {
+        position: fixed;
+        top: 0;
+        right: 0;
+        display: block;
+        z-index: 9999;
+        height: 150px;
+        width: 150px;
+      }
+
+      div img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
       body {
-        background-color: #000;
+        padding: 1rem;
+        background: rgb(7, 7, 7);
+        background-size: 300% 300%;
+      }
+
+      h1 {
+        color: white;
+        text-align: left;
+        font-size: 4rem;
+        font-family: 'Inter', sans-serif;
+        text-transform: uppercase;
+        margin-bottom: 0;
+      }
+
+      p {
+        color: white;
+      }
+
+      #blink-indicator {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: block !important;
+        z-index: 9999;
+      }
+
+      .open {
+        width: 40px;
+        height: 40px;
+        transition: all 0.2s;
+      }
+
+      .closed {
+        width: 40px;
+        height: 40px;
+        transition: all 0.2s;
+      }
+
+      svg {
+        fill: white;
       }
     </style>
   </head>
 
   <body>
 
-    <section>
-      <div>
-        <img
-          src="https://plus.unsplash.com/premium_photo-1716138192476-f34e85ad43c2?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="" id="image" style="width: 800px; height: 500px;">
+    <h1>Blink of an eye</h1>
+    <p>If you blink, an hour of my life passes by</p>
+
+
+    <section id="images" class="show-when-handsfree-is-loaded"></section>
+
+
+    <div id="debugger-holder"></div>
+
+    <div id="blink-indicator">
+      <div class="open">
+        <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="m11.998 5c-4.078 0-7.742 3.093-9.853 6.483-.096.159-.145.338-.145.517s.048.358.144.517c2.112 3.39 5.776 6.483 9.854 6.483 4.143 0 7.796-3.09 9.864-6.493.092-.156.138-.332.138-.507s-.046-.351-.138-.507c-2.068-3.403-5.721-6.493-9.864-6.493zm8.413 7c-1.837 2.878-4.897 5.5-8.413 5.5-3.465 0-6.532-2.632-8.404-5.5 1.871-2.868 4.939-5.5 8.404-5.5 3.518 0 6.579 2.624 8.413 5.5zm-8.411-4c2.208 0 4 1.792 4 4s-1.792 4-4 4-4-1.792-4-4 1.792-4 4-4zm0 1.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z"
+            fill-rule="nonzero" />
+        </svg>
       </div>
-      <div>
-        <img
-          src="https://images.unsplash.com/photo-1719937206491-ed673f64be1f?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="" id="image" style="width: 800px; height: 500px;">
+      <div class="closed">
+        <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="m17.069 6.546 2.684-2.359c.143-.125.32-.187.497-.187.418 0 .75.34.75.75 0 .207-.086.414-.254.562l-16.5 14.501c-.142.126-.319.187-.496.187-.415 0-.75-.334-.75-.75 0-.207.086-.414.253-.562l2.438-2.143c-1.414-1.132-2.627-2.552-3.547-4.028-.096-.159-.144-.338-.144-.517s.049-.358.145-.517c2.111-3.39 5.775-6.483 9.853-6.483 1.815 0 3.536.593 5.071 1.546zm2.318 1.83c.967.943 1.804 2.013 2.475 3.117.092.156.138.332.138.507s-.046.351-.138.507c-2.068 3.403-5.721 6.493-9.864 6.493-1.298 0-2.553-.313-3.73-.849l2.624-2.307c.352.102.724.156 1.108.156 2.208 0 4-1.792 4-4 0-.206-.016-.408-.046-.606zm-4.932.467c-.678-.528-1.53-.843-2.455-.843-2.208 0-4 1.792-4 4 0 .741.202 1.435.553 2.03l1.16-1.019c-.137-.31-.213-.651-.213-1.011 0-1.38 1.12-2.5 2.5-2.5.474 0 .918.132 1.296.362z"
+            fill-rule="nonzero" />
+        </svg>
       </div>
-      <div>
-        <img
-          src="https://plus.unsplash.com/premium_photo-1716138192476-f34e85ad43c2?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="" id="image" style="width: 800px; height: 500px;">
-      </div>
-      <div>
-        <img
-          src="https://plus.unsplash.com/premium_photo-1716138192476-f34e85ad43c2?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="" id="image" style="width: 800px; height: 500px;">
-      </div>
-      <div>
-        <img
-          src="https://plus.unsplash.com/premium_photo-1716138192476-f34e85ad43c2?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt="" id="image" style="width: 800px; height: 500px;">
-      </div>
-    </section>
+    </div>
 
     <!-- Instantiate and start it -->
     <script>
-      let index = 1;
-      const divs = document.querySelectorAll('section div');
+      let index = 0;
+      const imageCountEnd = 1044;
 
       function setup() {
-        // grab all the div's inside the section
+        //const divs = document.querySelectorAll('section div');
 
-        // hide all but the first div
-        divs.forEach((div, i) => {
-          if (i > 0) div.style.display = 'none';
-        });
+        // create a loop to create divs with images 
+        for (let i = 1; i < imageCountEnd; i++) {
+          const div = document.createElement('div');
+          // add data-index attribute to the div
+          div.setAttribute('data-index', i);
+          const img = document.createElement('img');
+          img.src = `images/${i}.jpg`;
+          div.appendChild(img);
+          // add width and height style to image
+          img.style.width = '800px';
+          img.style.height = '500px';
+          document.querySelector('#images').appendChild(div);
+        }
+
+        // show the first div
+        showDiv(1);
+
       }
 
       // show the div with the given index
       function showDiv(index) {
-        divs.forEach((div, i) => {
-          if (i === index) {
-            div.style.display = 'block';
-          } else {
-            div.style.display = 'none';
-          }
-        });
+
+        if (index < 0) {
+          index = 0;
+        }
+
+        if (index === imageCountEnd) {
+          index = 0;
+        }
+
+        // get the div with the given index
+        const div = document.querySelector(`section div[data-index="${index}"]`);
+        // get the div with index -1
+        const prevDiv = document.querySelector(`section div[data-index="${index - 1}"]`);
+        // hide the previous div
+
+
+        if (prevDiv && index !== 0) {
+          prevDiv.style.display = 'none';
+        }
+        // show that div
+        div.style.display = 'block';
+
       }
 
 
@@ -92,20 +181,28 @@
           }
         },
         showDebug: false,
-        // setup: {
-        //   wrap: {
-        //     $parent: document.querySelector('#debugger-holder')
-        //   }
-        // }
+        setup: {
+          wrap: {
+            $parent: document.querySelector('#debugger-holder')
+          }
+        }
       });
+
+
 
       handsfree.use('consoleLogger', (data) => {
 
-        //console.log(data.weboji.state.eyesClosed);
 
         if (data.weboji.state.eyesClosed) {
+
+          // find the closed div and show it
+          const closeEye = document.querySelector('.closed').style.display = 'block';
+          const openEye = document.querySelector('.open').style.display = 'none';
           index = index + 1;
           showDiv(index);
+        } else {
+          const closeEye = document.querySelector('.closed').style.display = 'none';
+          const openEye = document.querySelector('.open').style.display = 'block';
         }
       });
 
@@ -113,8 +210,6 @@
       handsfree.start();
 
       setup();
-
-
 
     </script>
 
