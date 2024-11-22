@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <!-- Include Handsfree.js -->
+    <link rel="stylesheet" href="https://unpkg.com/handsfree@8.5.1/build/lib/assets/handsfree.css" />
+    <script src="https://unpkg.com/handsfree@8.5.1/build/lib/handsfree.js"></script>
+    <style>
+      section {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      img {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        border: 4rem solid white;
+      }
+
+      body {
+        background-color: #000;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <section>
+      <div>
+        <img
+          src="https://plus.unsplash.com/premium_photo-1716138192476-f34e85ad43c2?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="" id="image" style="width: 800px; height: 500px;">
+      </div>
+      <div>
+        <img
+          src="https://images.unsplash.com/photo-1719937206491-ed673f64be1f?q=80&w=3474&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="" id="image" style="width: 800px; height: 500px;">
+      </div>
+      <div>
+        <img
+          src="https://plus.unsplash.com/premium_photo-1716138192476-f34e85ad43c2?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="" id="image" style="width: 800px; height: 500px;">
+      </div>
+      <div>
+        <img
+          src="https://plus.unsplash.com/premium_photo-1716138192476-f34e85ad43c2?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="" id="image" style="width: 800px; height: 500px;">
+      </div>
+      <div>
+        <img
+          src="https://plus.unsplash.com/premium_photo-1716138192476-f34e85ad43c2?q=80&w=3540&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          alt="" id="image" style="width: 800px; height: 500px;">
+      </div>
+    </section>
+
+    <!-- Instantiate and start it -->
+    <script>
+      let index = 1;
+      const divs = document.querySelectorAll('section div');
+
+      function setup() {
+        // grab all the div's inside the section
+
+        // hide all but the first div
+        divs.forEach((div, i) => {
+          if (i > 0) div.style.display = 'none';
+        });
+      }
+
+      // show the div with the given index
+      function showDiv(index) {
+        divs.forEach((div, i) => {
+          if (i === index) {
+            div.style.display = 'block';
+          } else {
+            div.style.display = 'none';
+          }
+        });
+      }
+
+
+      const handsfree = new Handsfree({
+
+        weboji: {
+          enabled: true,
+          morphs: {
+            threshold: {
+              eyeLeftClosed: 0,
+              eyeRightClosed: 0,
+            }
+          }
+        },
+        showDebug: false,
+        // setup: {
+        //   wrap: {
+        //     $parent: document.querySelector('#debugger-holder')
+        //   }
+        // }
+      });
+
+      handsfree.use('consoleLogger', (data) => {
+
+        //console.log(data.weboji.state.eyesClosed);
+
+        if (data.weboji.state.eyesClosed) {
+          index = index + 1;
+          showDiv(index);
+        }
+      });
+
+
+      handsfree.start();
+
+      setup();
+
+
+
+    </script>
+
+  </body>
+
+</html>
