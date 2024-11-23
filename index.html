@@ -109,20 +109,42 @@
       svg {
         fill: white;
       }
+
+      footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 1rem;
+        text-align: center;
+        font-family: 'Inter', sans-serif;
+        text-transform: uppercase;
+      }
+
+      footer a {
+        color: white;
+        font-size: 0.5rem;
+      }
     </style>
   </head>
 
   <body>
 
     <h1>Blink of an eye</h1>
-    <p>If you blink, an hour of my life passes by</p>
+    <p>If you blink, my life passes by</p>
+
 
 
     <section id="images" class="show-when-handsfree-is-loaded"></section>
 
     <div id="date">Taken on: </div>
 
-
+    <footer>
+      <a href="https://potloodgum.com">Made by Potloodgum, with <a
+          href="https://handsfreejs.netlify.app/ref/model/weboji.html#data">handsfree.js</a>
+    </footer>
     <div id="debugger-holder"></div>
 
     <div id="blink-indicator">
@@ -177,19 +199,20 @@
         // grab the current date
         const date = new Date();
         // remove 1044 days from date
-        date.setDate(date.getDate() - 365 + index);
+        date.setDate(date.getDate() - 1043 + index);
+
+        if (index === 0) {
+          date.setDate(date.getDate() - 1043);
+          date.setDate(date.getDate() - 1043);
+          document.querySelector(`section div[data-index="${1043}"]`).style.display = 'none';
+        }
 
         const dateDiv = document.querySelector('#date');
         dateDiv.innerHTML = date.toDateString();
 
 
-        if (index < 0) {
-          index = 0;
-        }
 
-        if (index === imageCountEnd) {
-          index = 0;
-        }
+        console.log(index);
 
         // get the div with the given index
         const div = document.querySelector(`section div[data-index="${index}"]`);
@@ -237,10 +260,22 @@
 
         if (data.weboji.state.eyesClosed) {
 
+
+
           // find the closed div and show it
           const closeEye = document.querySelector('.closed').style.opacity = '1';
           const openEye = document.querySelector('.open').style.opacity = '0';
+
+          if (index < 0) {
+            index = 0;
+          }
+
+          if (index === 1043) {
+            index = -1;
+          }
+
           index = index + 1;
+
           showDiv(index);
         } else {
           const closeEye = document.querySelector('.closed').style.opacity = '0';
