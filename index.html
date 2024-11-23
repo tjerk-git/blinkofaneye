@@ -49,7 +49,7 @@
       h1 {
         color: white;
         text-align: left;
-        font-size: 4rem;
+        font-size: 6rem;
         font-family: 'Inter', sans-serif;
         text-transform: uppercase;
         margin-bottom: 0;
@@ -68,15 +68,42 @@
       }
 
       .open {
-        width: 40px;
-        height: 40px;
+        width: 80px;
+        height: 80px;
         transition: all 0.2s;
+        display: block !important;
+        opacity: 0;
       }
 
       .closed {
-        width: 40px;
-        height: 40px;
+        width: 80px;
+        height: 80px;
         transition: all 0.2s;
+        display: block !important;
+        opacity: 0;
+      }
+
+      .loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        color: white;
+      }
+
+      #date {
+        color: white;
+        font-size: 2rem;
+        font-family: 'Inter', sans-serif;
+        text-transform: uppercase;
+        text-align: center;
+        display: block;
       }
 
       svg {
@@ -92,6 +119,8 @@
 
 
     <section id="images" class="show-when-handsfree-is-loaded"></section>
+
+    <div id="date">Taken on: </div>
 
 
     <div id="debugger-holder"></div>
@@ -145,6 +174,15 @@
       // show the div with the given index
       function showDiv(index) {
 
+        // grab the current date
+        const date = new Date();
+        // remove 1044 days from date
+        date.setDate(date.getDate() - 365 + index);
+
+        const dateDiv = document.querySelector('#date');
+        dateDiv.innerHTML = date.toDateString();
+
+
         if (index < 0) {
           index = 0;
         }
@@ -159,6 +197,10 @@
         const prevDiv = document.querySelector(`section div[data-index="${index - 1}"]`);
         // hide the previous div
 
+        // if div doesnt exist, return
+        if (!div) {
+          return;
+        }
 
         if (prevDiv && index !== 0) {
           prevDiv.style.display = 'none';
@@ -196,13 +238,13 @@
         if (data.weboji.state.eyesClosed) {
 
           // find the closed div and show it
-          const closeEye = document.querySelector('.closed').style.display = 'block';
-          const openEye = document.querySelector('.open').style.display = 'none';
+          const closeEye = document.querySelector('.closed').style.opacity = '1';
+          const openEye = document.querySelector('.open').style.opacity = '0';
           index = index + 1;
           showDiv(index);
         } else {
-          const closeEye = document.querySelector('.closed').style.display = 'none';
-          const openEye = document.querySelector('.open').style.display = 'block';
+          const closeEye = document.querySelector('.closed').style.opacity = '0';
+          const openEye = document.querySelector('.open').style.opacity = '1';
         }
       });
 
