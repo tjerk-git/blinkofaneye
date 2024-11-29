@@ -133,11 +133,9 @@
   </head>
 
   <body>
-
+    <div id="loading" class="loading">Loading images... <span id="progress">0</span>%</div>
     <h1>Blink of an eye</h1>
     <p>If you blink, my life passes by</p>
-
-
 
     <section id="images" class="show-when-handsfree-is-loaded"></section>
 
@@ -174,7 +172,8 @@
       const imageCountEnd = 1044;
 
       function setup() {
-        //const divs = document.querySelectorAll('section div');
+        let loadedImages = 0;
+        const totalImages = imageCountEnd - 1;
 
         // create a loop to create divs with images 
         for (let i = 1; i < imageCountEnd; i++) {
@@ -183,6 +182,20 @@
           div.setAttribute('data-index', i);
           const img = document.createElement('img');
           img.src = `images/${i}.jpg`;
+
+          // Add load event listener to track progress
+          img.onload = () => {
+            loadedImages++;
+            const progress = Math.round((loadedImages / totalImages) * 100);
+            document.getElementById('progress').textContent = progress;
+
+            if (loadedImages === totalImages) {
+              // All images loaded, remove loader and start Handsfree
+              document.getElementById('loading').style.display = 'none';
+              initializeHandsfree();
+            }
+          };
+
           div.appendChild(img);
           // add width and height style to image
           img.style.width = '800px';
@@ -192,7 +205,6 @@
 
         // show the first div
         showDiv(1);
-
       }
 
       // show the div with the given index
@@ -211,8 +223,6 @@
 
         const dateDiv = document.querySelector('#date');
         dateDiv.innerHTML = date.toDateString();
-
-
 
         console.log(index);
 
@@ -235,58 +245,53 @@
 
       }
 
-
-      const handsfree = new Handsfree({
-
-        weboji: {
-          enabled: true,
-          morphs: {
-            threshold: {
-              eyeLeftClosed: 0,
-              eyeRightClosed: 0,
+      function initializeHandsfree() {
+        const handsfree = new Handsfree({
+          weboji: {
+            enabled: true,
+            morphs: {
+              threshold: {
+                eyeLeftClosed: 0.5,
+                eyeRightClosed: 0.5,
+              }
+            }
+          },
+          showDebug: false,
+          setup: {
+            wrap: {
+              $parent: document.querySelector('#debugger-holder')
             }
           }
-        },
-        showDebug: false,
-        setup: {
-          wrap: {
-            $parent: document.querySelector('#debugger-holder')
+        });
+
+        handsfree.use('consoleLogger', (data) => {
+
+          if (data.weboji.state.eyesClosed) {
+
+            // find the closed div and show it
+            const closeEye = document.querySelector('.closed').style.opacity = '1';
+            const openEye = document.querySelector('.open').style.opacity = '0';
+
+            if (index < 0) {
+              index = 0;
+            }
+
+            if (index === 1043) {
+              index = -1;
+            }
+
+            index = index + 1;
+
+            showDiv(index);
+          } else {
+            const closeEye = document.querySelector('.closed').style.opacity = '0';
+            const openEye = document.querySelector('.open').style.opacity = '1';
           }
-        }
-      });
+        });
 
-
-
-      handsfree.use('consoleLogger', (data) => {
-
-
-        if (data.weboji.state.eyesClosed) {
-
-
-
-          // find the closed div and show it
-          const closeEye = document.querySelector('.closed').style.opacity = '1';
-          const openEye = document.querySelector('.open').style.opacity = '0';
-
-          if (index < 0) {
-            index = 0;
-          }
-
-          if (index === 1043) {
-            index = -1;
-          }
-
-          index = index + 1;
-
-          showDiv(index);
-        } else {
-          const closeEye = document.querySelector('.closed').style.opacity = '0';
-          const openEye = document.querySelector('.open').style.opacity = '1';
-        }
-      });
-
-
-      handsfree.start();
+        console.log('start!');
+        handsfree.start();
+      }
 
       setup();
 
