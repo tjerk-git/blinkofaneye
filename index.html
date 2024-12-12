@@ -2,86 +2,53 @@
 <html lang="en">
 
   <head>
-    <!-- Include Handsfree.js -->
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blink of an Eye</title>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Inter', sans-serif;
+        background: rgb(7, 7, 7);
+        color: rgb(230, 226, 226);
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
 
       section {
         display: flex;
         justify-content: center;
         align-items: center;
+        flex-grow: 1;
       }
 
       img {
+        max-width: 800px;
+        max-height: 500px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         border: 2rem solid white;
-      }
-
-      div {
-        display: none;
-      }
-
-      #debugger-holder {
-        position: fixed;
-        top: 0;
-        right: 0;
-        display: block;
-        z-index: 9999;
-        height: 150px;
-        width: 150px;
-      }
-
-      div img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
-
-      body {
-        padding: 1rem;
-        background: rgb(7, 7, 7);
-        background-size: 300% 300%;
+        object-fit: contain;
       }
 
       h1 {
         color: rgb(219, 211, 211);
-        text-align: left;
-        font-size: 6rem;
-        font-family: 'Inter', sans-serif;
+        font-size: 4rem;
         text-transform: uppercase;
-        margin-bottom: 0;
+        margin-bottom: 1rem;
       }
 
       p {
-        color: rgb(230, 226, 226);
         font-size: 1.2rem;
-        margin-top: 0;
-      }
-
-      #blink-indicator {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        display: block !important;
-        z-index: 9999;
-      }
-
-      .open {
-        width: 80px;
-        height: 80px;
-        transition: all 0.2s;
-        display: block !important;
-        opacity: 0;
-      }
-
-      .closed {
-        width: 80px;
-        height: 80px;
-        transition: all 0.2s;
-        display: block !important;
-        opacity: 0;
+        margin-bottom: 1rem;
       }
 
       .loading {
@@ -99,206 +66,179 @@
       }
 
       #date {
-        color: white;
-        font-size: 2rem;
-        font-family: 'Inter', sans-serif;
-        text-transform: uppercase;
         text-align: center;
-        display: block;
+        font-size: 2rem;
+        text-transform: uppercase;
+        margin: 1rem 0;
       }
 
-      svg {
+      #images div {
+        display: none;
+      }
+
+      .blink-indicator {
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        z-index: 9999;
+      }
+
+      .blink-indicator svg {
+        width: 80px;
+        height: 80px;
         fill: white;
+        transition: opacity 0.2s;
       }
 
       footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 1rem;
         text-align: center;
-        font-family: 'Inter', sans-serif;
+        padding: 1rem;
+        font-size: 0.8rem;
         text-transform: uppercase;
       }
 
       footer a {
         color: white;
-        font-size: 0.5rem;
+        text-decoration: none;
       }
     </style>
+    <link rel="stylesheet" href="https://unpkg.com/handsfree@8.5.1/build/lib/assets/handsfree.css" />
   </head>
 
   <body>
     <div id="loading" class="loading">Loading images... <span id="progress">0</span>%</div>
-    <h1>Blink of an eye</h1>
+
+    <h1>Blink of an Eye</h1>
     <p>If you blink, my life passes by</p>
 
-    <section id="images" class="show-when-handsfree-is-loaded"></section>
+    <section id="images"></section>
 
-    <div id="date">Taken on: </div>
+    <div id="date"></div>
 
-    <footer>
-      <a href="https://potloodgum.com">Made by Potloodgum, with <a
-          href="https://handsfreejs.netlify.app/ref/model/weboji.html#data">handsfree.js</a>
-    </footer>
-    <div id="debugger-holder"></div>
-
-    <div id="blink-indicator">
-      <div class="open">
-        <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="m11.998 5c-4.078 0-7.742 3.093-9.853 6.483-.096.159-.145.338-.145.517s.048.358.144.517c2.112 3.39 5.776 6.483 9.854 6.483 4.143 0 7.796-3.09 9.864-6.493.092-.156.138-.332.138-.507s-.046-.351-.138-.507c-2.068-3.403-5.721-6.493-9.864-6.493zm8.413 7c-1.837 2.878-4.897 5.5-8.413 5.5-3.465 0-6.532-2.632-8.404-5.5 1.871-2.868 4.939-5.5 8.404-5.5 3.518 0 6.579 2.624 8.413 5.5zm-8.411-4c2.208 0 4 1.792 4 4s-1.792 4-4 4-4-1.792-4-4 1.792-4 4-4zm0 1.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z"
-            fill-rule="nonzero" />
-        </svg>
-      </div>
-      <div class="closed">
-        <svg clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="2" viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="m17.069 6.546 2.684-2.359c.143-.125.32-.187.497-.187.418 0 .75.34.75.75 0 .207-.086.414-.254.562l-16.5 14.501c-.142.126-.319.187-.496.187-.415 0-.75-.334-.75-.75 0-.207.086-.414.253-.562l2.438-2.143c-1.414-1.132-2.627-2.552-3.547-4.028-.096-.159-.144-.338-.144-.517s.049-.358.145-.517c2.111-3.39 5.775-6.483 9.853-6.483 1.815 0 3.536.593 5.071 1.546zm2.318 1.83c.967.943 1.804 2.013 2.475 3.117.092.156.138.332.138.507s-.046.351-.138.507c-2.068 3.403-5.721 6.493-9.864 6.493-1.298 0-2.553-.313-3.73-.849l2.624-2.307c.352.102.724.156 1.108.156 2.208 0 4-1.792 4-4 0-.206-.016-.408-.046-.606zm-4.932.467c-.678-.528-1.53-.843-2.455-.843-2.208 0-4 1.792-4 4 0 .741.202 1.435.553 2.03l1.16-1.019c-.137-.31-.213-.651-.213-1.011 0-1.38 1.12-2.5 2.5-2.5.474 0 .918.132 1.296.362z"
-            fill-rule="nonzero" />
-        </svg>
-      </div>
+    <div class="blink-indicator">
+      <svg class="open" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="m11.998 5c-4.078 0-7.742 3.093-9.853 6.483-.096.159-.145.338-.145.517s.048.358.144.517c2.112 3.39 5.776 6.483 9.854 6.483 4.143 0 7.796-3.09 9.864-6.493.092-.156.138-.332.138-.507s-.046-.351-.138-.507c-2.068-3.403-5.721-6.493-9.864-6.493zm8.413 7c-1.837 2.878-4.897 5.5-8.413 5.5-3.465 0-6.532-2.632-8.404-5.5 1.871-2.868 4.939-5.5 8.404-5.5 3.518 0 6.579 2.624 8.413 5.5zm-8.411-4c2.208 0 4 1.792 4 4s-1.792 4-4 4-4-1.792-4-4 1.792-4 4-4zm0 1.5c-1.38 0-2.5 1.12-2.5 2.5s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5z" />
+      </svg>
+      <svg class="closed" style="opacity: 0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path
+          d="m17.069 6.546 2.684-2.359c.143-.125.32-.187.497-.187.418 0 .75.34.75.75 0 .207-.086.414-.254.562l-16.5 14.501c-.142.126-.319.187-.496.187-.415 0-.75-.334-.75-.75 0-.207.086-.414.253-.562l2.438-2.143c-1.414-1.132-2.627-2.552-3.547-4.028-.096-.159-.144-.338-.144-.517s.049-.358.145-.517c2.111-3.39 5.775-6.483 9.853-6.483 1.815 0 3.536.593 5.071 1.546zm2.318 1.83c.967.943 1.804 2.013 2.475 3.117.092.156.138.332.138.507s-.046.351-.138.507c-2.068 3.403-5.721 6.493-9.864 6.493-1.298 0-2.553-.313-3.73-.849l2.624-2.307c.352.102.724.156 1.108.156 2.208 0 4-1.792 4-4 0-.206-.016-.408-.046-.606zm-4.932.467c-.678-.528-1.53-.843-2.455-.843-2.208 0-4 1.792-4 4 0 .741.202 1.435.553 2.03l1.16-1.019c-.137-.31-.213-.651-.213-1.011 0-1.38 1.12-2.5 2.5-2.5.474 0 .918.132 1.296.362z" />
+      </svg>
     </div>
 
-    <link rel="stylesheet" href="./handsfree.css" />
-    <script type="text/javascript" defer=true src="./handsfree.js"></script>
+    <footer>
+      <a href="https://potloodgum.com">Made by Potloodgum</a>
+      with <a href="https://handsfreejs.netlify.app/ref/model/weboji.html#data">handsfree.js</a>
+    </footer>
 
-    <!-- Instantiate and start it -->
+
+    <script defer=true src="/handsfree.js"></script>
+
     <script>
-      let index = 0;
-      const imageCountEnd = 1044;
+      class BlinkApp {
+        constructor() {
+          this.index = 1;
+          this.imageCountEnd = 1044;
+          this.loadedImages = 0;
+          this.totalImages = this.imageCountEnd - 1;
 
-      function setup() {
-        let loadedImages = 0;
-        const totalImages = imageCountEnd - 1;
+          this.progressElement = document.getElementById('progress');
+          this.loadingElement = document.getElementById('loading');
+          this.imagesSection = document.getElementById('images');
+          this.dateElement = document.getElementById('date');
 
-        // create a loop to create divs with images 
-        for (let i = 1; i < imageCountEnd; i++) {
-          const div = document.createElement('div');
-          // add data-index attribute to the div
-          div.setAttribute('data-index', i);
-          const img = document.createElement('img');
-          img.src = `images/${i}.jpg`;
-
-          // Add load event listener to track progress
-          img.onload = () => {
-            loadedImages++;
-            const progress = Math.round((loadedImages / totalImages) * 100);
-            document.getElementById('progress').textContent = progress;
-
-            if (loadedImages === totalImages) {
-              // All images loaded, remove loader and start Handsfree
-              document.getElementById('loading').style.display = 'none';
-              initializeHandsfree();
-            }
-          };
-
-          div.appendChild(img);
-          // add width and height style to image
-          img.style.width = '800px';
-          img.style.height = '500px';
-          document.querySelector('#images').appendChild(div);
+          this.initializeApp();
         }
 
-        // show the first div
-        showDiv(1);
-      }
-
-      // show the div with the given index
-      function showDiv(index) {
-
-        // grab the current date
-        const date = new Date();
-        // remove 1044 days from date
-        date.setDate(date.getDate() - 1043 + index);
-
-        if (index === 0) {
-          date.setDate(date.getDate() - 1043);
-          date.setDate(date.getDate() - 1043);
-          document.querySelector(`section div[data-index="${1043}"]`).style.display = 'none';
+        initializeApp() {
+          this.preloadImages();
+          this.showDiv(1);
         }
 
-        const dateDiv = document.querySelector('#date');
-        dateDiv.innerHTML = date.toDateString();
+        preloadImages() {
+          for (let i = 1; i < this.imageCountEnd; i++) {
+            const div = document.createElement('div');
+            div.setAttribute('data-index', i);
 
-        console.log(index);
+            const img = new Image();
+            img.src = `images/${i}.jpg`;
+            img.width = 800;
+            img.height = 500;
 
-        // get the div with the given index
-        const div = document.querySelector(`section div[data-index="${index}"]`);
-        // get the div with index -1
-        const prevDiv = document.querySelector(`section div[data-index="${index - 1}"]`);
-        // hide the previous div
+            img.onload = () => this.updateLoadProgress();
+            img.onerror = () => console.error(`Failed to load image: images/${i}.jpg`);
 
-        // if div doesnt exist, return
-        if (!div) {
-          return;
+            div.appendChild(img);
+            this.imagesSection.appendChild(div);
+          }
         }
 
-        if (prevDiv && index !== 0) {
-          prevDiv.style.display = 'none';
+        updateLoadProgress() {
+          this.loadedImages++;
+          const progress = Math.round((this.loadedImages / this.totalImages) * 100);
+          this.progressElement.textContent = progress;
+
+          if (this.loadedImages === this.totalImages) {
+            this.loadingElement.style.display = 'none';
+            this.initializeHandsfree();
+          }
         }
-        // show that div
-        div.style.display = 'block';
 
-      }
+        showDiv(index) {
+          const date = new Date();
+          date.setDate(date.getDate() - 1043 + index);
 
-      function initializeHandsfree() {
-        const handsfree = new Handsfree({
-          weboji: {
-            enabled: true,
-            morphs: {
-              threshold: {
-                eyeLeftClosed: 0.5,
-                eyeRightClosed: 0.5,
+          this.dateElement.textContent = date.toDateString();
+
+          const currentDiv = document.querySelector(`section div[data-index="${index}"]`);
+          const prevDiv = document.querySelector(`section div[data-index="${index - 1}"]`);
+
+          if (prevDiv && index !== 0) {
+            prevDiv.style.display = 'none';
+          }
+
+          if (currentDiv) {
+            currentDiv.style.display = 'block';
+          }
+        }
+
+        initializeHandsfree() {
+          const handsfree = new Handsfree({
+            weboji: {
+              enabled: true,
+              morphs: {
+                threshold: {
+                  eyeLeftClosed: 0.5,
+                  eyeRightClosed: 0.5
+                }
               }
+            },
+            showDebug: false
+          });
+
+          const openEye = document.querySelector('.open');
+          const closedEye = document.querySelector('.closed');
+
+          handsfree.use('eyeTracker', (data) => {
+            if (data.weboji.state.eyesClosed) {
+              closedEye.style.opacity = '1';
+              openEye.style.opacity = '0';
+
+              this.index = (this.index >= this.imageCountEnd - 1) ? 0 : this.index + 1;
+              this.showDiv(this.index);
+            } else {
+              closedEye.style.opacity = '0';
+              openEye.style.opacity = '1';
             }
-          },
-          showDebug: false,
-          setup: {
-            wrap: {
-              $parent: document.querySelector('#debugger-holder')
-            }
-          }
-        });
+          });
 
-        handsfree.use('consoleLogger', (data) => {
-
-          if (data.weboji.state.eyesClosed) {
-
-            // find the closed div and show it
-            const closeEye = document.querySelector('.closed').style.opacity = '1';
-            const openEye = document.querySelector('.open').style.opacity = '0';
-
-            if (index < 0) {
-              index = 0;
-            }
-
-            if (index === 1043) {
-              index = -1;
-            }
-
-            index = index + 1;
-
-            showDiv(index);
-          } else {
-            const closeEye = document.querySelector('.closed').style.opacity = '0';
-            const openEye = document.querySelector('.open').style.opacity = '1';
-          }
-        });
-
-        console.log('start!');
-        handsfree.start();
+          handsfree.start();
+        }
       }
 
-      setup();
-
+      document.addEventListener('DOMContentLoaded', () => new BlinkApp());
     </script>
-
   </body>
 
 </html>
