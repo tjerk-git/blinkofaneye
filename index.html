@@ -32,8 +32,8 @@
       }
 
       img {
-        max-width: 800px;
-        max-height: 500px;
+        max-width: 1200px;
+        max-height: 800px;
         box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         border: 2rem solid white;
         object-fit: contain;
@@ -44,11 +44,13 @@
         font-size: 4rem;
         text-transform: uppercase;
         margin-bottom: 1rem;
+        text-align: center;
       }
 
       p {
         font-size: 1.2rem;
         margin-bottom: 1rem;
+        text-align: center;
       }
 
       .loading {
@@ -85,10 +87,13 @@
       }
 
       .blink-indicator svg {
-        width: 80px;
-        height: 80px;
+        width: 120px;
+        height: 120px;
         fill: white;
         transition: opacity 0.2s;
+        position:absolute;
+        top: 10px;
+        right: 10px;
       }
 
       footer {
@@ -102,6 +107,16 @@
         color: white;
         text-decoration: none;
       }
+      .handsfree-debugger{
+        position:absolute!important;
+        top:130px;
+        right:0;
+        z-index:0;
+        width: 250px;
+        height: 250px;
+        filter: grayscale(100%);
+        box-shadow: inset 0 0 100px rgba(0,0,0,0.8);
+      }
     </style>
     <link rel="stylesheet" href="https://unpkg.com/handsfree@8.5.1/build/lib/assets/handsfree.css" />
   </head>
@@ -109,8 +124,7 @@
   <body>
     <div id="loading" class="loading">Loading images... <span id="progress">0</span>%</div>
 
-    <h1>Blink of an Eye</h1>
-    <p>If you blink, my life passes by</p>
+    <h1>In a blink of an eye, my life passes by</h1>
 
     <section id="images"></section>
 
@@ -163,8 +177,8 @@
 
             const img = new Image();
             img.src = `images/${i}.jpg`;
-            img.width = 800;
-            img.height = 500;
+            img.width = 1280;
+            img.height = 800;
 
             img.onload = () => this.updateLoadProgress();
             img.onerror = () => console.error(`Failed to load image: images/${i}.jpg`);
@@ -214,7 +228,7 @@
                 }
               }
             },
-            showDebug: false
+            showDebug: true
           });
 
           const openEye = document.querySelector('.open');
